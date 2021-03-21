@@ -1,0 +1,1 @@
+-- Dúvida palin n = [n..1] porque não funciona?
