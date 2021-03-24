@@ -91,5 +91,5 @@ atrasados livros dataAtual =
   not (precede dataAtual dataDevolucao)]
 
 -- Exercício 11
-uniaoNRec :: [a] -> [a] -> [a]
-uniaoNRec xs ys = [x | x <- xs ++ ys, not((elem (x xs)) && (elem (x ys)))]
+uniaoNRec :: [Int] -> [Int] -> [Int]
+uniaoNRec xs ys = xs ++ [ y | y <- ys, not (elem y xs)]
