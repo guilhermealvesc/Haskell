@@ -69,12 +69,18 @@ bdEmprestimo =
   ("L433C5","BCC021",(01,9,2009),(10,09,2009),"encerrado"),   
   ("M654C3","BCC008",(04,9,2009),(15,09,2009),"aberto")]
 
+bissexto2 :: Data -> Bool
+bissexto2 (dia, mes, ano)
+  | mod ano 400 == 0 = True
+  | mod ano 4 == 0 && mod ano 100 /= 0 = True
+  | otherwise = False
+
 valida :: Data -> Bool
 valida (dia, mes, ano) 
   | (dia < 1 || dia > 31) || (mes < 1 || mes > 12) = False {- Tira mes e dia com valores inválidos -}
   | dia > 30 && (mes == 4 || mes == 6 || mes == 9 || mes == 11) = False {- Tira as datas com dia 31 em meses que são de 30 dias -}
   | mes == 2 && dia > 29 = False {- Tira as datas com dia 30 de fevereiro-}
-  | mes == 2 && dia > 28 && not (bissexto ano) = False {- Tira as datas com dia 29 que não são bissextas -}
+  | mes == 2 && dia > 28 && not (bissexto2 (dia, mes, ano)) = False {- Tira as datas com dia 29 que não são bissextas -}
   | otherwise = True
 
 precede :: Data -> Data -> Bool
