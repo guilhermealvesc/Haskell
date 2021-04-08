@@ -56,6 +56,26 @@ precoPassagem preco dataAtual dataNascimento
   | otherwise = preco
 
 {- exercício 4 -}
+--A
+gera1 :: [Int] -> [Int]
+gera1 x = [n * n * n | n <- x, even n, n >= 3, n <= 11]
+
+--B
+gera2 :: [Int] -> [(Int, Int)]
+gera2 x = [(n, m) | n <- x, n <= 5, m <- [n .. n * 3]]
+
+--C
+gera3 :: [Int] -> [Int]
+gera3 x = [n | parcial<-y,n<-parcial]
+  where y = [[1 .. n] | n <- x]
+
+--D
+gera4 ::[(Int,Int)]
+gera4 = [(n,n+1)|n<-[1..10],even n]
+
+--E
+gera5 :: [Int]
+gera5 = [fst n + snd n|n<-gera4]
 
 {- exercício 5 -}
 -- (a)
@@ -73,6 +93,18 @@ fatores n = [x | x <- [1..n], mod n x == 0]
 
 primos :: Int -> Int -> [Int]
 primos a b = [x | x <- [a + 1 .. b - 1], fatores x == [1,x]]
+{- Exercício 7 -}
+multiplos :: Int -> [Int]
+multiplos m = [n * m | n <- [2, 3 .. 1000]]
+
+comparaListas :: [Int] -> [Int] -> [Int] -> Int
+comparaListas (a : as) (b : bs) (c : cs)
+  | a == b && c == b = a
+  | otherwise = comparaListas as (dropWhile (< a) (b : bs)) (dropWhile (< a) (c : cs))
+
+mmc :: Int -> Int -> Int -> Int
+mmc a b c = comparaListas (multiplos a) (multiplos b) (multiplos c)
+
 
 {- Exercício 8 -} 
 serieOito :: Float -> Int -> Float
@@ -211,9 +243,8 @@ notasTroco valor = [v:vs | v <- disponiveis, valor >= v, vs <- notasTroco (valor
 
 {- exercício 20 -}
 queens n = solve n
-    where
-    solve 0 = [[]]
-    solve (k+1) = [q:b | b <- solve k, q <- [0..(n-1)], safe q b]
-    safe q b = and [not (checks q b i) | i <- [0..(length b-1)]]
-    checks q b i = q == (b!!i) || abs (q - (b!!i)) == i+1
-{- 20 -}
+  where
+  solve 0 = [[]]
+  solve (k+1) = [q:b | b <- solve k, q <- [0..(n-1)], safe q b]
+  safe q b = and [not (checks q b i) | i <- [0..(length b-1)]]
+  checks q b i = q == (b!!i) || abs (q - (b!!i)) == i+1
