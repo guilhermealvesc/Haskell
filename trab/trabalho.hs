@@ -116,7 +116,21 @@ zipar (h:hs) (x:xs) = [h,x] : zipar hs xs
 
 {- exercício 14 -}
 type Contato = (String, String, String, String)
--- recuperaNomeContato ::  -> String
+agenda :: [Contato]
+agenda = 
+  [
+  ("joao", "avenida aspirante", "34459646", "joef@hotmail.com"),
+  ("felipe", "avenida vasconcelos", "34454459646", "felps@hotmail.com")
+  ]
+
+recuperaNomeContato :: String -> String
+recuperaNomeContato email = _recuperaNomeContato email agenda
+  where
+  _recuperaNomeContato _ [] = "Email desconhecido"
+  _recuperaNomeContato email ((n,_,_,email2):hs) 
+    | email == email2 = n
+    | otherwise = _recuperaNomeContato email hs
+
 
 {- exercício 15 -}
 type Pessoa = (String, Float, Int, Char)
@@ -168,17 +182,38 @@ insere_ord x (h:hs)
   | otherwise = h : insere_ord x hs
 
 {- exercício 17 -}
-{- 
 reverte :: [t] -> [t]
-reverte [x] = [x]
-reverte [x,y] = [y,x]
-reverte (h:hs) 
-  | 
-  |  
--}
+reverte [] = []
+reverte (h:hs) = reverte hs ++ [h];  
+
 
 {- exercício 18 -}
--- elimina_repet :: [Int] -> [Int]
+count :: (Eq t) => t -> [t] -> Int
+count _ [] = 0
+count a (h:hs) 
+  | a == h = 1 + count a hs
+  | otherwise = count a hs
+
+elimina_repet :: (Eq t) => [t] -> [t]
+elimina_repet [] = []
+elimina_repet (h:hs) 
+  | count h hs > 0 = elimina_repet hs
+  | otherwise = h : elimina_repet hs
 
 
-{- falta 14, 17, 18, 19, 20 -}
+{- exercício 19 -}
+disponiveis = [1, 2, 5, 10, 50, 100]
+
+notasTroco :: Int -> [[Int]] 
+notasTroco 0 = [[]] 
+notasTroco valor = [v:vs | v <- disponiveis, valor >= v, vs <- notasTroco (valor-v) ]
+
+
+{- exercício 20 -}
+queens n = solve n
+    where
+    solve 0 = [[]]
+    solve (k+1) = [q:b | b <- solve k, q <- [0..(n-1)], safe q b]
+    safe q b = and [not (checks q b i) | i <- [0..(length b-1)]]
+    checks q b i = q == (b!!i) || abs (q - (b!!i)) == i+1
+{- 20 -}
