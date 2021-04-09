@@ -56,6 +56,6 @@ tamanho (_:t) = 1 + tamanho(t)
 {- exercício 6 -}
 uniaoRec2 :: [Int] -> [Int] -> [Int]
 uniaoRec2 l1 [] = l1
-uniaoRec2 (h:hs) (x:xs)
-  | pertence x (h:hs) = h : uniaoRec2 (hs) (xs) 
-  | otherwise = uniaoRec2 (comprime ([(h:hs), [x]])) xs
+uniaoRec2 l1 (x:xs)
+  | pertence x l1 = uniaoRec2 l1 xs
+  | otherwise = uniaoRec2 (l1 ++ [x]) xs
