@@ -215,8 +215,11 @@ insere_ord x (h:hs)
 
 {- exercício 17 -}
 reverte :: [t] -> [t]
-reverte [] = []
-reverte (h:hs) = reverte hs ++ [h];  
+reverte li = _reverte li []
+  where
+    _reverte :: [a] -> [a] -> [a]
+    _reverte [] l = l
+    _reverte (h:hs) l = _reverte hs (h:l)
 
 
 {- exercício 18 -}
@@ -235,16 +238,22 @@ elimina_repet (h:hs)
 
 {- exercício 19 -}
 disponiveis = [1, 2, 5, 10, 50, 100]
-
-notasTroco :: Int -> [[Int]] 
-notasTroco 0 = [[]] 
-notasTroco valor = [v:vs | v <- disponiveis, valor >= v, vs <- notasTroco (valor-v) ]
-
+notasTroco :: Int -> [[Int]]
+-- Fixa um valor e calcula o troco dos outros
+-- 1 // Trocos restantes, 2 // Trocos restantes ...
+notasTroco 0 = [[]]
+notasTroco valor = [(n:ns) | n <- disponiveis, valor >= 0, ns <- notasTroco (valor - n)]
 
 {- exercício 20 -}
-queens n = solve n
+validPos :: Int -> Int -> Bool
+validPos posAnt posNovo = abs (posNovo - posAnt) > 1
+
+delete :: Int -> [Int] -> [Int]
+delete del list = [ a | a <- list, a /= del ]
+
+nRainhas :: Int -> [[Int]]
+nRainhas n = solucao [1..n]
   where
-  solve 0 = [[]]
-  solve (k+1) = [q:b | b <- solve k, q <- [0..(n-1)], safe q b]
-  safe q b = and [not (checks q b i) | i <- [0..(length b-1)]]
-  checks q b i = q == (b!!i) || abs (q - (b!!i)) == i+1
+    solucao :: [Int] -> [[Int]]
+    solucao [x] = [[x]]
+    solucao n = [ (q:p) | q <- n, p <- solucao(delete q n), validPos q (head p)]
