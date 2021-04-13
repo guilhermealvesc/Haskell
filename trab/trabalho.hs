@@ -93,6 +93,7 @@ fatores n = [x | x <- [1..n], mod n x == 0]
 
 primos :: Int -> Int -> [Int]
 primos a b = [x | x <- [a + 1 .. b - 1], fatores x == [1,x]]
+
 {- Exercício 7 -}
 multiplos :: Int -> [Int]
 multiplos m = [n * m | n <- [2, 3 .. 1000]]
@@ -178,9 +179,13 @@ pessoas = [("Rosa",1.66, 27,'F'),
     ("Daniel", 1.74, 72, 'S'),
     ("Jocileide", 1.69, 18, 'S')]
 
--- mais ineficiente
-alturaMedia :: [Pessoa] -> Float
-alturaMedia pes = (sum [alt | (_,alt,_,_) <- pes]) / fromIntegral (length pessoas)
+
+sumAlturas :: [Pessoa] -> Float
+sumAlturas [] = 0
+sumAlturas ((_, altura, _, _) : xs) = altura + sumAlturas xs
+
+mediaAlturas :: [Pessoa] -> Float
+mediaAlturas listPessoa = sumAlturas listPessoa / fromIntegral (length listPessoa)
 
 maisNovaIdade :: [Pessoa] -> Int
 maisNovaIdade [(_, _, idade, _)] = idade
