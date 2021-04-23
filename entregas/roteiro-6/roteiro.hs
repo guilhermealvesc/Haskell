@@ -87,7 +87,70 @@ fatorial n
       | otherwise = n * prodIntervalo(m, n - 1)
 
 {- Exercício 2 -}
+--a
+valida2 :: Data -> Bool
+valida2 (dia, mes, ano)  
+  | (dia < 1 || dia > 31) || (mes < 1 || mes > 12) = False {- Tira mes e dia com valores inválidos -}
+  | dia > 30 && (mes == 4 || mes == 6 || mes == 9 || mes == 11) = False {- Tira as datas com dia 31 em meses que são de 30 dias -}
+  | mes == 2 && dia > 29 = False {- Tira as datas com dia 30 de fevereiro-}
+  | mes == 2 && dia > 28 && not (let {
+    _bissexto ano 
+      | mod ano 400 == 0 = True
+      | mod ano 4 == 0 && mod ano 100 /= 0 = True
+      | otherwise = False 
+  } in _bissexto ano) = False {- Tira as datas com dia 29 que não são bissextas -}
+  | otherwise = True
+    
+--b
+bissextos2 :: [Int] -> [Int]
+bissextos2 xs = let {
+  _bissexto ano 
+    | mod ano 400 == 0 = True
+    | mod ano 4 == 0 && mod ano 100 /= 0 = True
+    | otherwise = False
+  } in [x | x <- xs, _bissexto x]
+--c
+-- atrasados2 :: Emprestimos -> Data -> Emprestimos
+-- atrasados2 livros dataAtual = 
+--   let {
+--     _bissexto2 (dia, mes, ano)
+--       | mod ano 400 == 0 = True
+--       | mod ano 4 == 0 && mod ano 100 /= 0 = True
+--       | otherwise = False
+--     _valida (dia, mes, ano) 
+--       | (dia < 1 || dia > 31) || (mes < 1 || mes > 12) = False {- Tira mes e dia com valores inválidos -}
+--       | dia > 30 && (mes == 4 || mes == 6 || mes == 9 || mes == 11) = False {- Tira as datas com dia 31 em meses que são de 30 dias -}
+--       | mes == 2 && dia > 29 = False {- Tira as datas com dia 30 de fevereiro-}
+--       | mes == 2 && dia > 28 && not (_bissexto2 (dia, mes, ano)) = False {- Tira as datas com dia 29 que não são bissextas -}
+--       | otherwise = True
+--     _precede (dia1, mes1, ano1) (dia2, mes2, ano2) 
+--       | not (valida (dia1, mes1, ano1)) || not (_valida (dia2, mes2, ano2)) = False
+--       | ano1 < ano2 = True
+--       | ano1 == ano2 && mes1 < mes2 = True
+--       | ano1 == ano2 && mes1 == mes2 && dia1 < dia2 = True
+--       | otherwise = False
+--   } in [(codigoLivro, codigoAluno, dataEmprestimo, dataDevolucao, status) | (codigoLivro, codigoAluno, dataEmprestimo, dataDevolucao, status) <- livros, not (_precede dataAtual dataDevolucao)]
+--d
+fibo3 :: Int -> Int
 
+fibo3 n = let {
+    n_par n = let {
+      n_calcula (n, par)
+        | n == 1 = par
+        | otherwise = n_calcula (n - 1, let passo (x, y) = (y, x + y) in passo(par))
+    } in n_calcula (n, (1,1))
+  } in fst(n_par(n))
+--e
+fatorial2 :: Int -> Int
+fatorial2 n
+  | n == 0 = 1
+  | otherwise = let {
+    _prodIntervalo (m, n)
+      | m > n = -1
+      | m == n = n
+      | otherwise = n * _prodIntervalo(m, n - 1)
+  } in _prodIntervalo(1, n)
+    
 {- Exercício 3 -}
 
 {- Exercício 4 -}
