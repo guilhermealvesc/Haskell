@@ -110,26 +110,29 @@ bissextos2 xs = let {
     | otherwise = False
   } in [x | x <- xs, _bissexto x]
 --c
--- atrasados2 :: Emprestimos -> Data -> Emprestimos
--- atrasados2 livros dataAtual = 
---   let {
---     _bissexto2 (dia, mes, ano)
---       | mod ano 400 == 0 = True
---       | mod ano 4 == 0 && mod ano 100 /= 0 = True
---       | otherwise = False
---     _valida (dia, mes, ano) 
---       | (dia < 1 || dia > 31) || (mes < 1 || mes > 12) = False {- Tira mes e dia com valores inválidos -}
---       | dia > 30 && (mes == 4 || mes == 6 || mes == 9 || mes == 11) = False {- Tira as datas com dia 31 em meses que são de 30 dias -}
---       | mes == 2 && dia > 29 = False {- Tira as datas com dia 30 de fevereiro-}
---       | mes == 2 && dia > 28 && not (_bissexto2 (dia, mes, ano)) = False {- Tira as datas com dia 29 que não são bissextas -}
---       | otherwise = True
---     _precede (dia1, mes1, ano1) (dia2, mes2, ano2) 
---       | not (valida (dia1, mes1, ano1)) || not (_valida (dia2, mes2, ano2)) = False
---       | ano1 < ano2 = True
---       | ano1 == ano2 && mes1 < mes2 = True
---       | ano1 == ano2 && mes1 == mes2 && dia1 < dia2 = True
---       | otherwise = False
---   } in [(codigoLivro, codigoAluno, dataEmprestimo, dataDevolucao, status) | (codigoLivro, codigoAluno, dataEmprestimo, dataDevolucao, status) <- livros, not (_precede dataAtual dataDevolucao)]
+
+atrasados2 :: Emprestimos -> Data -> Emprestimos
+atrasados2 livros dataAtual = 
+  let {
+    _valida (dia, mes, ano) 
+      | (dia < 1 || dia > 31) || (mes < 1 || mes > 12) = False {- Tira mes e dia com valores inválidos -}
+      | dia > 30 && (mes == 4 || mes == 6 || mes == 9 || mes == 11) = False {- Tira as datas com dia 31 em meses que são de 30 dias -}
+      | mes == 2 && dia > 29 = False {- Tira as datas com dia 30 de fevereiro-}
+      | mes == 2 && dia > 28 && not (let {
+        _bissexto2 (dia, mes, ano)
+          | mod ano 400 == 0 = True
+          | mod ano 4 == 0 && mod ano 100 /= 0 = True
+          | otherwise = False
+      } in _bissexto2 (dia, mes, ano)) = False {- Tira as datas com dia 29 que não são bissextas -}
+      | otherwise = True
+  } in let {
+    _precede (dia1, mes1, ano1) (dia2, mes2, ano2) 
+      | not (_valida (dia1, mes1, ano1)) || not (_valida (dia2, mes2, ano2)) = False
+      | ano1 < ano2 = True
+      | ano1 == ano2 && mes1 < mes2 = True
+      | ano1 == ano2 && mes1 == mes2 && dia1 < dia2 = True
+      | otherwise = False
+  } in [(codigoLivro, codigoAluno, dataEmprestimo, dataDevolucao, status) | (codigoLivro, codigoAluno, dataEmprestimo, dataDevolucao, status) <- livros, not (_precede dataAtual dataDevolucao)]
 --d
 fibo3 :: Int -> Int
 
@@ -151,8 +154,27 @@ fatorial2 n
       | otherwise = n * _prodIntervalo(m, n - 1)
   } in _prodIntervalo(1, n)
     
-{- Exercício 3 -}
+{- Exercício 3 -> exercicio3.jpeg -}
 
-{- Exercício 4 -}
+{- Exercício 4 -> exercicio4.png -}
 
-{- Exercício 5 -}
+{- Exercício 5 -> exercicio5.png 
+  
+a) (λx λy. y)((λz. z)(λz. z))(λw. w) 5
+(\x -> \y -> y) ((\z -> z)(\z -> z)) (\w -> w) 5
+
+b) ((λf. (λx. f(f x))) (λy. (y * y))) 3
+((\f -> (\x -> f(f x))) (\y -> (y * y))) 3
+
+c) ((λf. (λx. f(f x)))(λy.(+ y y))) 5
+((\f -> (\x -> f(f x))) (\y -> (y + y))) 5
+
+d) ((λx. (λy. + x y) 5) ((λy. - y 3) 7))
+((\x -> (\y -> x + y) 5) ((\y -> y - 3) 7))
+
+e) (((λf. (λx. f(f(f x)))) (λy. (y * y))) 2)
+((\f -> (\x -> f(f(f x)))) (\y -> (y * y))) 2
+
+f) (λx. λy. + x ((λx. - x 3) y)) 5 6
+(\x -> \y -> x + ((\x -> x - 3) y)) 5 6
+-}
