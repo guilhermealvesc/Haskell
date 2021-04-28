@@ -1,1 +1,0 @@
-{- Assistir vídeos -}
