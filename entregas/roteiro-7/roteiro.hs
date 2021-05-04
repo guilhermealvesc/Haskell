@@ -48,9 +48,15 @@ menores10 l = _contador10 l ([], 0)
     _contador10 :: [Int] -> ([Int], Int) -> ([Int], Int)
     _contador10 [] (lis, c) = (lis, c)
     _contador10 (h:hs) (l, c)
-      | h < 10 = _contador10 hs (h:l, c + 1)
+      | h < 10 = _contador10 hs (l ++ [h], c + 1)
       | otherwise = _contador10 hs (l, c)
 
 {- exercício 11 -}
-busca :: (Eq a) => [a] -> (Bool, Int)
-busca lis = 
+busca :: (Eq a) => a -> [a] -> (Bool, Int)
+busca v l = _busca v l (False, 0)
+  where
+    _busca :: (Eq a) => a -> [a] -> (Bool, Int) -> (Bool, Int)
+    _busca _ [] (l, c) = (l, c)
+    _busca v (h:hs) (l, c)
+      | v == h = (True, c + 1)
+      | otherwise = _busca v hs (l, c + 1)
