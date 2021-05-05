@@ -13,7 +13,7 @@ troca (x:y:zs)
 --selection
 selecao :: (Ord a) => [a] -> [a]
 selecao [] = []
-selecao xs = [x] ++ selecao(remove x xs)
+selecao xs = x : selecao(remove x xs)
               where x = minimo xs
 
 remove :: (Ord a) => a -> [a] -> [a]
@@ -43,8 +43,21 @@ insereOrd x (y:ys)
 --quick
 quicksort :: (Ord a) => [a] -> [a]
 quicksort [] = []
+-- quicksort (p : xs) = 
+--   quicksort [x | x <- xs, x < p]
+--   ++ [p] ++
+--   quicksort [x | x <- xs, x >= p]
+
 quicksort (p : xs) = 
-  quicksort [x | x <- xs, x < p]
+  quicksort (fst maiorMenor)
   ++ [p] ++
-  quicksort [x | x <- xs, x >= p]
+  quicksort (snd maiorMenor)
+  where 
+    maiorMenor = seleciona p xs ([], [])
+    seleciona :: (Ord a) => a -> [a] -> ([a], [a]) -> ([a], [a])
+    seleciona pivo [] (menores, maiores) = (menores, maiores)
+    seleciona pivo (h:hs) (menores, maiores) 
+      | h < pivo = seleciona pivo hs (h:menores, maiores)
+      | otherwise = seleciona pivo hs (menores, h:maiores)
+      
 
